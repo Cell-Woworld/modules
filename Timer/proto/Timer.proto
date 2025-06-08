@@ -1,0 +1,38 @@
+﻿syntax = "proto3";
+package Timer;
+
+message Set
+{
+	string id = 1;				// timeout event name: Timer.Timeout.[id]
+	uint64 interval = 2;		// msec
+	bool period = 3;
+	string specific = 4;		// ISO8601/RFC3339,	yyyy-mm-ddThh:mm:ss.xx[Z/+/-]hh:mm
+								// if sepcific != "", interval must be n*3600000 (n%24!=0), n*86400000 (n%7!=0), n*604800000, n*2592000000, n*‭31536000000
+	int64 offset = 5;			// msec
+}
+
+message Cancel
+{
+	string id = 1;
+}
+
+message CancelAll
+{
+}
+
+message Now
+{
+	string id = 1;
+	string offset = 2;						// second or yyyy-mm-dd hh:mm:ss.xx
+	string specific = 3;					// ISO8601/RFC3339 (yyyy-mm-ddThh:mm:ss.xx[Z/+/-]hh:mm)
+	bool absolute = 4;						// true: offset from 00:00:00 of Today, false: offset from now on
+	uint64 epoch = 5;						// microsec
+	string target_model_name = 6;
+	message Result
+	{
+		string id = 1;						// the same as input "id" for idenfication
+		repeated string utc = 2;			// [yyyy,mm,dd,hh,mm,ss,uuuuuu]
+		repeated string localTime = 3;		// [yyyy,mm,dd,hh,mm,ss,uuuuuu]
+		uint64 epoch = 4;
+	}
+}

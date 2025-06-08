@@ -1,0 +1,111 @@
+syntax = "proto3";
+package Database;
+
+message ConstAPI
+{
+	enum PROC_TYPE			// it must be the same as PROC_TYPE in Database.proto
+	{
+		QUERY = 0;
+		INSERT = 1;
+		UPDATE = 2;
+		DELETE = 3;
+	}
+}
+message CreateStoredProc
+{
+	bool show_result = 1;
+	repeated string batch_list = 2;		// model name list without "::"", ex.[aaa.bbb.ccc,xxx.yyy.zzz]
+	bool rollback_if_error = 3;
+	string name = 4;					// not necessary, default: scxml file name
+	string done_message = 5;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 6;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+	bool disable_only_full_group_by = 7;// overwrite SQL model "ONLY_FULL_GROUP_BY"
+}
+
+message CallStoredProc
+{
+	string name = 1;
+	string callback_message = 2;		// for PROC_TYPE == QUERY only
+	bool show_result = 3;
+	string done_message = 4;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 5;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+}
+
+message Function
+{
+	enum FUNCTION_TYPE
+	{
+		INVALID_FUNCTION = 0;
+		CONCAT = 1;
+		COUNT = 2;
+		SUM = 3;
+		RIGHT_NOW = 4;
+		UTC_NOW = 5;
+		FORMAT = 6;
+		DATE_FORMAT = 7;				// parameters: [datetime, YYYY-MM-DDThh:mm:ss[.ffffff](ie. ISO 8601 time notation)]
+		MAX = 8;
+		MIN = 9;
+		UUID = 10;						// generate uuid
+		UUID_TO_BIN = 11;				// convert uuid from string to binary, parameters: ['@@@@@@@@-@@@@-@@@@-@@@@-@@@@@@@@@@@@']
+		BIN_TO_UUID = 12;				// convert uuid from binary to string
+		DATE_ADD = 13;					// parameters: [####-##-##T##:##:##.######, [-]###, MICROSECOND/SECOND/MINUTE/HOUR/DAY/WEEK/MONTH/QUARTER/YEAR/SECOND_MICROSECOND/MINUTE_MICROSECOND/MINUTE_SECOND/HOUR_MICROSECOND/HOUR_SECOND/HOUR_MINUTE/DAY_MICROSECOND/DAY_SECOND/DAY_MINUTE/DAY_HOUR/YEAR_MONTH]
+		TIME_DIFF = 14;					// parameters: [####-##-##T##:##:##.######, ####-##-##T##:##:##.######, MICROSECOND/SECOND/MINUTE/HOUR/DAY/WEEK/MONTH/QUARTER/YEAR]
+		CALC = 15;						// single parameter of arithmetic
+		JSON_TABLE = 16;				// parameters: JSON_TABLE("[col1, col2,...]", "model_name"). Data stored in model_name must be a json string in the format of [{"col1":col1_val1, "col2":col2_val1}, {"col1":col1_val2, "col2":col2_val2},...]
+		CONVERT = 17;					// parameters: CONVERT(col, type) or CONVERT(col using charset)
+		SUBSTRING_INDEX = 18;			// parameters: [src_string, keyword, count]. 
+		FIND_IN_SET = 19;				// parameters: [id, list].
+		TO_UNIXTIME = 20;				// parameters: [datetime at UTC, YYYY-MM-DDThh:mm:ss[.ffffff](ie. ISO 8601 time notation)]
+		FROM_UNIXTIME = 21;				// parameters: [epoch] (to UTC)
+		ROUND = 22;						// parameters: number to be rounded
+		IFNULL = 23;					// parameters: [col, default value]
+		RAND = 24;						// parameters: []
+		SHA2 = 25;						// parameters: [src_string, hash_length (0/224/256/384/512)]
+		TO_BASE64 = 26;					// parameters: [src_string]
+		FROM_BASE64 = 27;				// parameters: [src_string]
+		TODAY = 28;						// parameters: []
+		SUBSTRING = 29;					// parameters: [src_string, start, count]
+	}
+	FUNCTION_TYPE name = 1;
+	repeated string parameters = 2;
+	string alias = 3;
+	string target_model_name = 4;		// not necessary, default: "database_name.parent_name_of_database_scxml.alias_name"
+	bool   remove_delimeters = 5;		// ex. remove "-.:T" of DATE_FORMAT
+}
+
+message Setup
+{
+	string			driver		= 1;
+	string			server		= 2;	// MySQL: ODBC #.# ANSI Driver; DO NOT use Unicode Driver
+	string			port 		= 3;
+	string			uid			= 4;
+	string			pwd			= 5;
+	string			database	= 6;
+}
+
+message CreateClause
+{
+	bool show_result = 1;
+	string alias = 2;
+	string owner = 3;					// the short name of stored procedure
+	string done_message = 4;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 5;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+	string target_model_name = 6;		// not necessary, default: "database_name.parent_name_of_database_scxml.alias_name"
+}
+
+message Execute
+{
+	bool show_result = 1;
+	repeated string batch_list = 2;		// model name list without "::"", ex.[aaa.bbb.ccc,xxx.yyy.zzz]
+	bool rollback_if_error = 3;
+	string name = 4;					// not necessary, default: scxml file name
+	string callback_message = 5;		// for PROC_TYPE == QUERY only
+	string done_message = 6;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 7;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+	string full_script = 8;				// if this parameter exists, it overwrites overall. escpecially for unsupported syntax
+}
+
+message WaitForCall
+{
+	string name = 1;
+}

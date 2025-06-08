@@ -1,0 +1,76 @@
+{
+	"background": {
+		"style": "background-size:contain;margin:auto;max-width:1080px;background-color:white;"
+	},
+	"layout": [
+		{
+			"description": "Function List",
+			"id": "function_list",
+			"component": "Section",
+			"subcomponent": "div",
+			"style": "padding:10px 5%;",
+			"items": [
+				{
+					"description": "Clock Title",
+					"id": "app_punch_clock_title",
+					"component": "div",
+					"style": "margin:100px 10% 0px 10%;text-align:center;font-size:20px;",
+					"content": "伺服器報時"
+				},
+				{
+					"description": "Now",
+					"id": "app_punch_clock",
+					"component": "SimpleClock",
+					"style": "margin:0px 10%;text-align:center;font-size:20px;",
+					"value": ""
+				},
+				{
+					"description": "Punch In",
+					"id": "app_punch_in",
+					"component": "v-btn",
+					"color": "primary",
+					"style": "margin:30px 0px 30px 30%;inline-size:40%;font-size:30px;",
+					"content": "上班"
+				},
+				{
+					"description": "Punch Out",
+					"id": "app_punch_out",
+					"component": "v-btn",
+					"color": "green white--text",
+					"style": "margin:30px 0px 30px 30%;inline-size:40%;font-size:30px;",
+					"content": "下班"
+				}
+			]
+		},
+		{
+			"description": "GPS is not available",
+			"id": "app_punch_no_gps",
+			"component": "OK",
+			"class": "list-menu-title",
+			"style": "text-align:center;",
+			"content": "{\"question\":\"打卡失敗。失敗原因: 無法取得定位訊號，請再換個位置試試看\", \"ok\":\"確認\"}"
+		},
+		{
+			"description": "Punch success",
+			"id": "app_punch_success",
+			"component": "OK",
+			"class": "list-menu-title",
+			"style": "text-align:center;",
+			"content": "{\"question\":\"打卡成功\", \"ok\":\"確認\"}"
+		},
+		{
+			"description": "GoBack",
+			"id": "go_back",
+			"component": "v-btn",
+			"color": "primary",
+			"class": "btn-home",
+			"content": "回首頁"
+		},
+		{
+			"description": "Footer",
+			"id": "main-footer",
+			"component": "Footer",
+			"content": "宇竣資訊"
+		}
+	]
+}

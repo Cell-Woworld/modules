@@ -1,0 +1,18 @@
+[submodule "Timer/inc/date"]
+	path = Timer/inc/date
+	url = https://github.com/HowardHinnant/date
+[submodule "pugixml"]
+	path = pugixml
+	url = https://github.com/zeux/pugixml
+[submodule "ECPay/inc/pugixml"]
+	path = ECPay/inc/pugixml
+	url = https://github.com/zeux/pugixml
+[submodule "ECPay/src/PicoSHA2"]
+	path = ECPay/src/PicoSHA2
+	url = https://github.com/okdshin/PicoSHA2
+[submodule "ECPay/inc/PicoSHA2"]
+	path = ECPay/inc/PicoSHA2
+	url = https://github.com/okdshin/PicoSHA2
+[submodule "Barcode/stb"]
+	path = Barcode/stb
+	url = https://github.com/nothings/stb.git

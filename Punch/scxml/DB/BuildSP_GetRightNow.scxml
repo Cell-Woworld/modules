@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_GetRightNow" qt:editorversion="4.11.1">
+    <state id="BuildSP_GetRightNow">
+        <qt:editorinfo scenegeometry="278.60;361.67;-17.11;28.12;542.07;561.11" geometry="278.60;361.67;-295.71;-333.55;542.07;561.11"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="YJInfo"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo scenegeometry="241.98;343.70;2.89;101.79;501.89;347.02" geometry="-36.62;-17.97;-239.09;-241.91;501.89;347.02"/>
+            <transition type="internal" event="AND">
+                <send event="OR"/>
+            </transition>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+            <invoke src="../../DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Setup">
+                <qt:editorinfo scenegeometry="168.89;215.52;108.89;165.52;120;100" geometry="-73.09;-128.18;-60;-50;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Preparing"/>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Query">
+                <qt:editorinfo scenegeometry="204.34;350.96;109.84;309.41;120;100" geometry="-37.64;7.26;-94.50;-41.55;120;100"/>
+                <onentry>
+                    <send event="Database.Query">
+                        <qt:editorinfo geometry="56.95;57.99;0;0;0;0"/>
+                        <param name="model_list" expr="[::PROJECT_NAME.BuildSP_GetRightNow.RightNow]"/>
+                    </send>
+                    <send event="StartBuild">
+                        <qt:editorinfo geometry="86.95;87.99;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="StartBuild" target="CreateStoredProcedure"/>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo scenegeometry="391.31;355.80;298.31;305.80;186;100" geometry="149.33;12.10;-93;-50;186;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="false"/>
+                        <param name="name" expr="PROJECT_NAME.GetRightNow"/>
+                        <param name="done_message" expr="Database.Task.Done.Punch.GetRightNow"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.GetRightNow" target="Final_1"/>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="384.78;212.61;324.78;162.61;120;100" geometry="142.80;-131.09;-60;-50;120;100"/>
+                <transition type="external" event="Prepared" target="Query"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="-26.71;9.62;0;0;0;0"/>
+                        <param expr="RIGHT_NOW" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="RightNow"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="152.97;512.46;69.97;462.46;120;100" geometry="-125.63;150.79;-83;-50;120;100"/>
+            <transition type="external" target="Final_1">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="253.93;620.95;233.93;600.95;40;40" geometry="253.93;620.95;-20;-20;40;40"/>
+    </final>
+</scxml>

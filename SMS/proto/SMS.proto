@@ -1,0 +1,50 @@
+syntax = "proto3";
+package SMS;
+
+message Send
+{
+	enum SMS_PROVIDER
+	{
+		TWS = 0;
+		CHT = 1;
+	}
+	
+	SMS_PROVIDER provider = 1;
+	string host				= 2;
+	int32  port				= 3;
+	string username			= 4;
+	string password			= 5;
+	string mobile			= 6;
+	string message			= 7;
+	int32  period			= 8;
+	bool   without_veriCode = 9;
+	int32  max_length		= 10;
+
+	message MetaData
+	{
+		string code = 1;
+		string text = 2;
+		int32 msgid = 3;
+	}
+
+	message Result
+	{
+		string veri_code = 1;
+		int32 msgid = 2;		// receipt from SMS vendor
+	}
+}
+
+message Error
+{
+	Error.ERROR_CODE code = 1;
+	bytes msg = 2;
+
+	enum ERROR_CODE
+	{
+		CONNECTION_FAILED = 0;
+		UNFINISHED_FLOW = 1;
+		UNAUTHORIZED_ERROR = 2;
+		DATA_ERROR = 3;
+		SYSTEM_ERROR = 4;
+	}
+}

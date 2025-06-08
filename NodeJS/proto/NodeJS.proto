@@ -1,0 +1,20 @@
+syntax = "proto3";
+package NodeJS;
+
+message Eval
+{
+	message Result
+	{
+		string command = 1;
+		string response = 2;
+	}
+	message Error
+	{
+		int32  code		= 1;
+		string message	= 2;
+	}
+	string command = 1;
+	string content = 2;
+	string file = 3;
+	repeated string params = 4;
+}

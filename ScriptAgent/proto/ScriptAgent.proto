@@ -1,0 +1,13 @@
+syntax = "proto3";
+package ScriptAgent;
+
+message Script
+{
+	string command	= 1;
+	bytes content = 2;
+	message Result
+	{
+		string command	= 1;
+		bytes response = 2;
+	}
+}

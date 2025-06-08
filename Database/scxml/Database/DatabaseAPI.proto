@@ -1,0 +1,93 @@
+syntax = "proto3";
+package Database;
+
+message ConstAPI
+{
+	enum PROC_TYPE			// it must be the same as PROC_TYPE in Database.proto
+	{
+		QUERY = 0;
+		INSERT = 1;
+		UPDATE = 2;
+		DELETE = 3;
+	}
+}
+message CreateStoredProc
+{
+	bool show_result = 1;
+	repeated string batch_list = 2;		// model name list without "::"", ex.[aaa.bbb.ccc,xxx.yyy.zzz]
+	bool rollback_if_error = 3;
+	string name = 4;					// not necessary, default: scxml file name
+	string done_message = 5;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 6;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+}
+
+message CallStoredProc
+{
+	string name = 1;
+	string callback_message = 2;		// for PROC_TYPE == QUERY only
+	bool show_result = 3;
+	string done_message = 4;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 5;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+}
+
+message Function
+{
+	enum FUNCTION_TYPE
+	{
+		INVALID_FUNCTION = 0;
+		CONCAT = 1;
+		COUNT = 2;
+		SUM = 3;
+		RIGHT_NOW = 4;
+		FORMAT = 5;
+		DATE_FORMAT = 6;				// parameters: [datetime, YYYY-MM-DDThh:mm:ss[.ffffff](ie. ISO 8601 time notation)]
+		MAX = 7;
+		MIN = 8;
+		UUID = 9;						// generate uuid
+		UUID_TO_BIN = 10;				// convert uuid from string to binary
+		BIN_TO_UUID = 11;				// convert uuid from binary to string
+		DATE_ADD = 12;					// parameters: [####-##-##T##:##:##.######, [-]###, MICROSECOND/SECOND/MINUTE/HOUR/DAY/WEEK/MONTH/QUARTER/YEAR/SECOND_MICROSECOND/MINUTE_MICROSECOND/MINUTE_SECOND/HOUR_MICROSECOND/HOUR_SECOND/HOUR_MINUTE/DAY_MICROSECOND/DAY_SECOND/DAY_MINUTE/DAY_HOUR/YEAR_MONTH]
+		TIME_DIFF = 13;					// parameters: [####-##-##T##:##:##.######, ####-##-##T##:##:##.######, MICROSECOND/SECOND/MINUTE/HOUR/DAY/WEEK/MONTH/QUARTER/YEAR]
+		CALC = 14;						// single parameter of arithmetic
+		JSON_TABLE = 15;				// parameters: JSON_TABLE("[col1, col2,...]", "model_name"). Data stored in model_name must be a json string in the format of [{"col1":col1_val1, "col2":col2_val1}, {"col1":col1_val2, "col2":col2_val2},...]
+	}
+	FUNCTION_TYPE name = 1;
+	repeated string parameters = 2;
+	string alias = 3;
+	string target_model_name = 4;		// not necessary, default: "database_name.parent_name_of_database_scxml.alias_name"
+}
+
+message Setup
+{
+	string			driver		= 1;
+	string			server		= 2;
+	string			port 		= 3;
+	string			uid			= 4;
+	string			pwd			= 5;
+	string			database	= 6;
+}
+
+message CreateClause
+{
+	bool show_result = 1;
+	string alias = 2;
+	string owner = 3;					// the short name of stored procedure
+	string done_message = 4;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 5;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+}
+
+message Execute
+{
+	bool show_result = 1;
+	repeated string batch_list = 2;		// model name list without "::"", ex.[aaa.bbb.ccc,xxx.yyy.zzz]
+	bool rollback_if_error = 3;
+	string name = 4;					// not necessary, default: scxml file name
+	string callback_message = 5;		// for PROC_TYPE == QUERY only
+	string done_message = 6;			// default: Database.Task.Done.[DATABASE_NAME].[PROC_NAME]
+	string err_message = 7;				// default: Database.Error.[DATABASE_NAME].[PROC_NAME]
+}
+
+message WaitForCall
+{
+	string name = 1;
+}

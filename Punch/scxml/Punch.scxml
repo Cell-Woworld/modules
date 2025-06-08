@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Punch" qt:editorversion="4.11.1">
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="446.56;208.19;426.56;188.19;40;40" geometry="446.56;208.19;-20;-20;40;40"/>
+    </final>
+    <state id="Punch" initial="Punch.Init">
+        <qt:editorinfo scenegeometry="15.94;201.84;-304.13;-222.83;672.84;787.42" geometry="15.94;201.84;-320.07;-424.67;672.84;787.42"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="YJInfo"/>
+            <data id="PUNCH_CLOCK" expr="2"/>
+        </datamodel>
+        <invoke src="../DB/Database/Database.scxml" id="Database"/>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+            <qt:editorinfo startTargetFactors="93.49;54.62" movePoint="5.34;0"/>
+        </transition>
+        <state id="Punch.Running">
+            <qt:editorinfo scenegeometry="124.63;164.75;-284.13;131.25;630.46;413.34" geometry="108.69;-37.09;-408.76;-33.50;630.46;413.34"/>
+            <invoke src="./DB/CallSP_GetRightNow.scxml" id="GetRightNow"/>
+            <invoke src="./DB/CallSP_CreatePunch.scxml" id="CreatePunch"/>
+            <invoke src="./DB/CallSP_GetPunch.scxml" id="GetPunch"/>
+            <invoke src="./DB/CallSP_UpdatePunch.scxml" id="UpdatePunch"/>
+            <onentry>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;./Punch_Layout.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.layout&quot;})</script>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;./Punch_Layout_Item.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.helper&quot;})</script>
+            </onentry>
+            <state id="Punch.Standby">
+                <qt:editorinfo scenegeometry="197.20;256.89;-140.80;206.29;358;176.60" geometry="72.57;92.14;-338;-50.60;358;176.60"/>
+                <onentry>
+                    <assign location="Punch.Layout" expr="::PROJECT_NAME.LayoutTemplate.layout"/>
+                    <assign location="Punch.Item" expr="::PROJECT_NAME.LayoutTemplate.helper"/>
+                    <assign location="Punch.AlreadyPunch" expr="false"/>
+                    <send event="Punch.GetPunch">
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="punchType" expr="1"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Punch.Client.PunchIn" target="Punch.CreatePunchIn">
+                    <qt:editorinfo startTargetFactors="33.85;92.84"/>
+                </transition>
+                <transition type="external" event="Punch.Client.PunchOut" target="Punch.PunchOut"/>
+                <transition type="internal" event="Punch.GetRightNow.Result">
+                    <assign location="Punch.Layout[layout][0][items][PUNCH_CLOCK][value]" expr="::Punch.GetRightNow.Result.rightNow"/>
+                    <assign expr="::Punch.Item[punch_in_already]" location="Punch.Layout[layout][]"/>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Punch.GetRightNow">
+                    <send event="VuetifyKits.Layout">
+                        <qt:editorinfo geometry="-587.16;340.03;0;0;0;0"/>
+                        <param name="@payload" expr="::Punch.Layout"/>
+                    </send>
+                    <log expr="::Punch.Layout" label="Database.Task.Done.Punch.GetRightNow"/>
+                </transition>
+                <transition type="internal" event="Punch.GetPunch.Result">
+                    <assign location="Punch.AlreadyPunch" expr="true"/>
+                    <send event="Punch.GetRightNow">
+                        <qt:editorinfo geometry="-922.79;-36.40;0;0;0;0"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Punch.GetPunch" cond="::Punch.AlreadyPunch=false">
+                    <send event="VuetifyKits.Layout">
+                        <qt:editorinfo geometry="-982.79;-96.40;0;0;0;0"/>
+                        <param name="@payload" expr="::Punch.Layout"/>
+                    </send>
+                    <log expr="::Punch.Layout" label="Database.Task.Done.Punch.GetPunch"/>
+                </transition>
+                <transition type="external" event="Punch.Client.PunchIn" target="Punch.UpdatePunchIn" cond="::Punch.AlreadyPunch">
+                    <qt:editorinfo endTargetFactors="24.21;21.23"/>
+                </transition>
+            </state>
+            <state id="Punch.CreatePunchIn">
+                <qt:editorinfo scenegeometry="19.88;473.57;-69.12;423.57;178;100" geometry="-104.75;308.82;-89;-50;178;100"/>
+                <onentry>
+                    <send event="Punch.CreatePunch">
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="punchType" expr="1"/>
+                        <param name="latitude" expr="::Punch.Client.PunchIn.latitude"/>
+                        <param name="longitude" expr="::Punch.Client.PunchIn.longitude"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.CreatePunch" target="Punch.Standby">
+                    <qt:editorinfo endTargetFactors="60.89;90.16" startTargetFactors="58.14;12.05"/>
+                    <send event="Punch.Client.PunchSuccess"/>
+                </transition>
+            </state>
+            <state id="Punch.PunchOut">
+                <qt:editorinfo scenegeometry="-188;474.59;-262;424.59;148;100" geometry="-312.63;309.84;-74;-50;148;100"/>
+                <onentry>
+                    <qt:editorinfo geometry="-74;-50;0;0;0;0"/>
+                    <send event="Punch.CreatePunch">
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="punchType" expr="2"/>
+                        <param name="latitude" expr="::Punch.Client.PunchOut.latitude"/>
+                        <param name="longitude" expr="::Punch.Client.PunchOut.longitude"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.CreatePunch" target="Punch.Standby">
+                    <qt:editorinfo endTargetFactors="19.47;76.49" startTargetFactors="25.19;15.49"/>
+                    <send event="Punch.Client.PunchSuccess"/>
+                </transition>
+            </state>
+            <state id="Punch.UpdatePunchIn">
+                <qt:editorinfo scenegeometry="237.33;474.43;148.33;424.43;178;100" geometry="112.70;309.68;-89;-50;178;100"/>
+                <onentry>
+                    <send event="Punch.UpdatePunch">
+                        <param name="id" expr="::Punch.Client.PunchIn.id"/>
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="punchType" expr="1"/>
+                        <param name="latitude" expr="::Punch.Client.PunchIn.latitude"/>
+                        <param name="longitude" expr="::Punch.Client.PunchIn.longitude"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.UpdatePunch" target="Punch.Standby">
+                    <qt:editorinfo endTargetFactors="82.14;85.31" startTargetFactors="42.31;12.30"/>
+                    <send event="Punch.Client.PunchSuccess"/>
+                </transition>
+            </state>
+            <transition type="external" event="Database.Error.*" target="Punch.Standby">
+                <qt:editorinfo startTargetFactors="98.01;40.28"/>
+            </transition>
+        </state>
+        <state id="Punch.Init" initial="Punch.LoadPunch">
+            <qt:editorinfo scenegeometry="-220.78;243.35;-282.37;-126.36;610.66;178.81" geometry="-236.72;41.51;-61.59;-369.71;610.66;178.81"/>
+            <state id="Punch.DBSetup">
+                <qt:editorinfo scenegeometry="232.78;-25.63;126.78;-75.63;180.50;100" geometry="453.56;-268.98;-106;-50;180.50;100"/>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Setup">
+                        <qt:editorinfo geometry="35.91;-61.57;0;0;0;0"/>
+                        <param expr="MySQL ODBC 8.0 ANSI Driver" name="driver"/>
+                        <param name="server" expr="mysql"/>
+                        <param name="port" expr="3306"/>
+                        <param name="database" expr="PROJECT_NAME"/>
+                        <param name="uid" expr="yjinfoapp"/>
+                        <param name="pwd" expr="ufjunjZ CUNJ"/>
+                    </send>
+                </onentry>
+                <transition type="external" target="Punch.Running">
+                    <qt:editorinfo endTargetFactors="72.77;21.11"/>
+                </transition>
+            </state>
+            <state id="Punch.LoadPunch">
+                <qt:editorinfo scenegeometry="-183.87;-24.82;-262.37;-74.82;157;100" geometry="36.91;-268.17;-78.50;-50;157;100"/>
+                <transition type="external" target="Punch.LoadFileIO" cond="::return.Bio.Cell.NewRNA"/>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;Punch&quot;})</script>
+                </onentry>
+            </state>
+            <state id="Punch.LoadFileIO">
+                <qt:editorinfo scenegeometry="19.47;-23.40;-59.03;-73.40;157;100" geometry="240.25;-266.75;-78.50;-50;157;100"/>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;../FileIO/FileIO&quot;})</script>
+                </onentry>
+                <transition type="external" target="Punch.DBSetup" cond="::return.Bio.Cell.NewRNA"/>
+            </state>
+        </state>
+    </state>
+</scxml>

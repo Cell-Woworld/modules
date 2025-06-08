@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SetupDB" qt:editorversion="4.11.1">
+    <state id="SetupDB" initial="CreateSP">
+        <qt:editorinfo geometry="574.87;248.28;-540.61;-213.15;433.88;518.35" scenegeometry="574.87;248.28;34.26;35.13;433.88;518.35"/>
+        <datamodel>
+            <data id="DATABASE_NAME" expr="YJInfo"/>
+        </datamodel>
+        <state id="CreateSP">
+            <qt:editorinfo removedInitial="CreatePost" geometry="-32.09;240.44;-484.51;-382.49;373.85;297.82" scenegeometry="542.78;488.72;58.27;106.23;373.85;297.82"/>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo movePoint="3.07;-4.09" startTargetFactors="31.57;94.03" endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_SetupDB"/>
+            <onentry>
+                <qt:editorinfo geometry="-128.62;-130.01;0;0;0;0"/>
+                <assign location="Database.Driver" expr="MySQL ODBC 8.0 ANSI Driver"/>
+                <assign location="Database.Server" expr="mysql"/>
+                <assign location="Database.Port" expr="3306"/>
+                <assign location="Database.Name" expr="DATABASE_NAME"/>
+                <assign location="Database.UID" expr="justdoitapp"/>
+                <assign location="Database.Password" expr="cekjvemdCELD"/>
+                <assign location="Bio.Cell.Model.DefaultReturnModelname" expr="true"/>
+            </onentry>
+            <state id="GetRightNow">
+                <qt:editorinfo geometry="-268.66;-270.20;-192;-50;129;100" scenegeometry="274.12;218.52;82.12;168.52;129;100"/>
+                <invoke src="./BuildSP_GetRightNow.scxml" id="GetRightNow">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="GetPunch"/>
+            </state>
+            <state id="GetPunch">
+                <qt:editorinfo geometry="-81.43;-270.08;-187.50;-50;120;100" scenegeometry="461.35;218.64;273.85;168.64;120;100"/>
+                <invoke src="./BuildSP_GetPunch.scxml" id="GetPunch">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="CreatePunch"/>
+            </state>
+            <state id="CreatePunch">
+                <qt:editorinfo geometry="-276.01;-155.69;-188.50;-50;122;100" scenegeometry="266.77;333.03;78.27;283.03;122;100"/>
+                <invoke src="./BuildSP_CreatePunch.scxml" id="CreatePunch">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdatePunch"/>
+            </state>
+            <state id="UpdatePunch">
+                <qt:editorinfo geometry="-83.40;-154.95;-191;-50;127;100" scenegeometry="459.38;333.77;268.38;283.77;127;100"/>
+                <invoke src="./BuildSP_UpdatePunch.scxml" id="UpdatePunch">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="SetupDone"/>
+            </state>
+        </state>
+        <state id="SetupDone">
+            <qt:editorinfo geometry="-194.47;230.15;-60;-50;120;100" scenegeometry="380.40;478.43;320.40;428.43;120;100"/>
+            <transition type="external" target="Final_SetupDB">
+                <send event="Punch.SetupDB.Done"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="-437.61;224.96;-83;-50;120;100" scenegeometry="137.26;473.24;54.26;423.24;120;100"/>
+            <transition type="external" target="Final_SetupDB"/>
+        </state>
+    </state>
+    <final id="Final_SetupDB">
+        <qt:editorinfo geometry="252.55;613.67;-20;-20;40;40" scenegeometry="252.55;613.67;232.55;593.67;40;40"/>
+    </final>
+</scxml>

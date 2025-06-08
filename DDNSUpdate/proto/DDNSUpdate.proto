@@ -1,0 +1,13 @@
+syntax = "proto3";
+package DDNSUpdate;
+
+message nsupdate_info
+{
+	message Update
+	{
+		string host = 1;
+		string path = 2;
+		string id = 3;
+		string password = 4;
+	}
+}

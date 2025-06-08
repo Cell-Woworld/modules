@@ -1,0 +1,44 @@
+syntax = "proto3";
+package Converter;
+
+enum CONVERTER_TYPE
+{
+	INVALID = 0;
+	AES_CBC = 1;			// AES256 CBC encrypt / decrypt
+	AES_ECB = 2;			// AES256 ECB encrypt / decrypt
+	AES_CTR = 3;			// AES256 CTR encrypt / decrypt
+	SHA256 = 4;				// SHA256 one-way hash
+	BASE64 = 5;				// base64 encode / decode
+	URLCODER = 6;			// url endcode / decode
+	DOTNET_URLCODER = 7;	// .net style url endcode / decode
+	ASCII_HEX = 8;			// ascii to hex (Push)
+	JSON_ESCAPE = 9;		// escape chars for a legal JSON string
+	DECIMAL_BASE62 = 10;	// decimal to base62
+	HMAC_SHA256 = 11;		// HMAC_SHA256 one-way hash
+}
+
+message Item
+{
+	string src = 1;			// source model name (input)
+	string target = 2;		// target model name (output)
+}
+
+message Push
+{
+	// input data
+	CONVERTER_TYPE type = 1;
+	repeated Item model_list = 2;	// model name list 
+	string key = 3;
+	string key_model = 4;
+	string seed_model = 5;			// model name for input of specific IV or output of randomized IV used by Pull later
+}
+
+message Pull
+{	
+	// input data
+	CONVERTER_TYPE type = 1;
+	repeated Item model_list = 2;			// source model name list 
+	string key = 3;
+	string key_model = 4;
+	string seed = 5;
+}

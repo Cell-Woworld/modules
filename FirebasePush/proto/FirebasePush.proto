@@ -1,0 +1,12 @@
+syntax = "proto3";
+package FirebasePush;
+
+message Send
+{
+	string token = 1;
+	string targetId = 2;
+	bytes title = 3;
+	bytes content = 4;
+	string projectId = 5;
+	string issuer = 6;
+}

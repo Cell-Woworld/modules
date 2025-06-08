@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="MyPay" qt:editorversion="4.12.4">
+    <state id="Init">
+        <qt:editorinfo scenegeometry="181.07;117.84;121.07;67.84;120;100" geometry="181.07;117.84;-60;-50;120;100"/>
+        <onentry>
+            <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;MyPay&quot;})</script>
+        </onentry>
+        <transition type="external" target="Run" cond="::return.Bio.Cell.NewRNA"/>
+        <transition type="external" target="Final_1"/>
+    </state>
+    <state id="Run">
+        <qt:editorinfo scenegeometry="480.89;94.84;301.89;44.84;239;146" geometry="480.89;94.84;-179;-50;239;146"/>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <onentry/>
+        <transition type="internal" event="Payment.Order">
+            <script>Payment.Order</script>
+        </transition>
+        <transition type="internal" event="Payment.CheckOrder">
+            <script>Payment.CheckOrder</script>
+        </transition>
+        <transition type="internal" event="Payment.CancelOrder">
+            <script>Payment.CancelOrder</script>
+        </transition>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="293.71;299.81;273.71;279.81;40;40" geometry="293.71;299.81;-20;-20;40;40"/>
+    </final>
+</scxml>

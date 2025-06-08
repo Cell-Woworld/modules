@@ -1,0 +1,187 @@
+syntax = "proto3";
+package Bio;
+
+message Cell
+{
+	message Destroyed
+	{
+	}
+
+	message Division
+	{
+		string filename = 1;
+	}
+
+	message WaitApoptosis
+	{
+	}
+
+	message ForwardEvent
+	{
+		string uuid = 1;			// target uuid. Given "" means the last one.
+		string name = 2;
+		bytes payload = 3;
+		bool toItself = 4;
+	}
+	
+	message Evolution
+	{
+	}
+
+	message BroadcastEvent
+	{
+		string name = 1;
+		bytes payload = 2;
+		bool toItself = 3;
+	}
+
+	message Aggregation
+	{
+		string uuid = 1;
+	}
+
+	message Deaggregation
+	{
+		string uuid = 1;
+	}
+
+	message SessionInfo
+	{
+		repeated string aggregation = 1;
+	}
+
+	message Snapshot
+	{
+		string id = 1;
+		string path = 2;
+	}
+	
+	message RevertSnapshot
+	{
+		string id = 1;
+		string path = 2;
+		message Result
+		{
+			bool restored = 1;
+		}
+	}
+
+	message RemoveSourceFromMsgQueue
+	{
+		uint64 source_chromosome = 1;
+	}
+}
+
+message Chromosome
+{
+	message Init
+	{
+		string filename = 1;
+	}
+
+	message Final
+	{
+	}
+
+	message AssignByMessage
+	{
+		string model_name = 1;
+		string field_name = 2;
+		repeated string path = 3;
+		string value = 4;
+	}
+
+	message SessionInfo
+	{
+		message Activity
+		{
+			string name_space = 1;
+			string name = 2;
+			bytes payload = 3;
+		}
+		string id = 1;
+		string gene = 2;
+		bool auto_forward = 3;
+		repeated string state_list = 4;
+		repeated string rna_list = 5;
+		repeated Activity activities = 6;
+		repeated SessionInfo children = 7;
+	}
+
+	message GetActiveStates
+	{
+		message Result
+		{
+			repeated string state_list = 1;
+		}
+	}
+
+	message SetActiveStates
+	{
+		repeated string state_list = 1;
+	}
+
+	message RegisterActivity
+	{
+		string id = 1;
+		string name = 2;
+		bytes payload = 3;
+	}
+
+	message UnregisterActivity
+	{
+		string id = 1;
+		string name = 2;
+	}
+
+	message RestoreActivity
+	{
+	}
+
+	message AddProto
+	{
+		string filename = 1;
+	}
+
+	message GenerateUUID
+	{
+		string target_model_name = 1;
+	}
+
+	message SetAutoForward
+	{
+		string id = 1;
+		bool on = 2;
+	}
+
+	message StringFormat
+	{
+		string format = 1;
+		string params = 2;
+		string target_model_name = 3;
+	}
+
+	message Substring
+	{
+		string source = 1;
+		uint64 offset = 2;
+		uint64 count = 3;
+		string target_model_name = 4;
+	}
+
+	message ReplaceString
+	{
+		string source = 1;					// string data
+		string source_model_name = 2;		// the model name with string inside
+		string to_be_replaced = 3;
+		string replace_with = 4;
+		string target_model_name = 5;
+	}
+
+	message GenerateRandom
+	{
+		int32 min_limit = 1;
+		int32 max_limit = 2;
+		string target_model_name = 3;
+	}
+}

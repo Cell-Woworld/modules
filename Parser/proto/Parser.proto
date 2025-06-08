@@ -1,0 +1,25 @@
+syntax = "proto3";
+package Parser;
+
+message ParseCSV
+{
+	bytes data = 1;
+	string filename = 2;
+	string delimeter = 3;
+	message Result
+	{
+		repeated string output = 1;
+	}
+	message Done
+	{
+	}
+}
+
+message ExportCSV
+{
+	repeated string data = 1;			// format: [["col1","col2","col3"],["aaa","bbb","ccc"],["ddd","eee","fff"]]
+	string filename = 2;
+	message Done
+	{
+	}
+}

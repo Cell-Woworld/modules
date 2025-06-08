@@ -1,0 +1,45 @@
+syntax = "proto3";
+package Punch;
+
+message GetRightNow
+{
+	message Result
+	{
+		string rightNow = 1;
+	}
+}
+
+message CreatePunch
+{
+	string userId = 1;
+	int32 punchType = 2;
+	double latitude = 3;
+	double longitude = 4;
+}
+
+message GetPunch
+{
+	string userId = 1;
+	string startTime = 2;
+	string endTime = 3;
+	int32 punchType = 4;
+	message Result
+	{
+		int32 id = 1;
+		string userId = 2;
+		string account = 3;
+		string punchTime = 4;
+		int32 punchType = 5;
+		double latitude = 6;
+		double longitude = 7;
+	}
+}
+
+message UpdatePunch
+{
+	int32 id = 1;
+	string userId = 2;
+	int32 punchType = 3;
+	double latitude = 4;
+	double longitude = 5;
+}

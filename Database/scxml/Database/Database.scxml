@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Database" qt:editorversion="4.11.1">
+    <state id="Database">
+        <qt:editorinfo geometry="248.40;58.84;-173.47;-26.15;957.91;622.05" scenegeometry="248.40;58.84;74.93;32.69;957.91;622.05"/>
+        <state id="LoadGenericModule">
+            <qt:editorinfo geometry="-24.16;288.10;-98.26;-50;172;100" scenegeometry="224.24;346.94;125.98;296.94;172;100"/>
+            <transition type="external" target="LoadMySQL" cond="::return.Bio.Cell.NewRNA">
+                <qt:editorinfo movePoint="-86.57;-3.48"/>
+            </transition>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;Database&quot;});</script>
+            </onentry>
+            <transition type="external" target="Final_2_Database"/>
+        </state>
+        <state id="LoadMSSQL">
+            <qt:editorinfo geometry="14.22;471.91;-60;-50;120;100" scenegeometry="262.62;530.75;202.62;480.75;120;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;SQLServer&quot;})</script>
+            </onentry>
+            <transition type="external" target="SetupMSSQL" cond="::return.Bio.Cell.NewRNA"/>
+            <transition type="external" target="Final_2_Database"/>
+        </state>
+        <state id="LoadMySQL">
+            <qt:editorinfo geometry="16.93;101.48;-60;-50;120;100" scenegeometry="265.33;160.32;205.33;110.32;120;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;MySQL&quot;})</script>
+            </onentry>
+            <transition type="external" target="Final_2_Database"/>
+            <transition type="external" target="SetupMySQL" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1_Database">
+            <qt:editorinfo movePoint="7.50;-4.50" startTargetFactors="98.50;49.75"/>
+        </transition>
+        <state id="SetupMySQL">
+            <qt:editorinfo geometry="263.95;102.47;-158;-50;178;100" scenegeometry="512.35;161.31;354.35;111.31;178;100"/>
+            <transition type="external" event="Database.Setup" target="WaitSetupMySQL">
+                <script>Database.Setup</script>
+            </transition>
+            <transition type="internal" event="Database.Config">
+                <script>Database.Config</script>
+            </transition>
+        </state>
+        <state id="SetupMSSQL">
+            <qt:editorinfo geometry="256.69;470.38;-158;-50;179.36;100" scenegeometry="505.09;529.22;347.09;479.22;179.36;100"/>
+            <transition type="external" event="Database.Setup" target="WaitSetupMSSQL">
+                <script>Database.Setup</script>
+            </transition>
+            <transition type="internal" event="Database.Config">
+                <script>Database.Config</script>
+            </transition>
+        </state>
+        <state id="Running">
+            <qt:editorinfo geometry="704.44;153.63;-203;-65.91;263;431.91" scenegeometry="952.84;212.47;749.84;146.56;263;431.91"/>
+            <transition type="internal" event="Database.AddCond">
+                <script>Database.AddCond</script>
+            </transition>
+            <transition type="internal" event="Database.CreateStoredProc">
+                <script>Database.CreateStoredProc</script>
+            </transition>
+            <transition type="internal" event="Database.Function">
+                <script>Database.Function</script>
+            </transition>
+            <transition type="internal" event="Database.CallStoredProc">
+                <script>Database.CallStoredProc</script>
+            </transition>
+            <transition type="internal" event="Database.CreateClause">
+                <script>Database.CreateClause</script>
+            </transition>
+            <transition type="internal" event="Database.Insert">
+                <script>Database.Insert</script>
+            </transition>
+            <transition type="internal" event="Database.Update">
+                <script>Database.Update</script>
+            </transition>
+            <transition type="internal" event="Database.Remove">
+                <script>Database.Remove</script>
+            </transition>
+            <transition type="internal" event="Database.Query">
+                <script>Database.Query</script>
+            </transition>
+            <transition type="internal" event="Database.Execute">
+                <script>Database.Execute</script>
+            </transition>
+            <transition type="internal" event="OR">
+                <script>OR</script>
+            </transition>
+            <transition type="internal" event="Database.GenerateUUID">
+                <script>Database.GenerateUUID</script>
+            </transition>
+            <transition type="internal" event="Database.WaitForCall">
+                <script>Database.WaitForCall</script>
+            </transition>
+            <transition type="internal" event="Database.Task.Done.*">
+                <script>Database.Task.Done</script>
+            </transition>
+            <transition type="internal" event="Database.Error.*">
+                <script>Database.Error</script>
+            </transition>
+        </state>
+        <state id="WaitSetupMySQL">
+            <qt:editorinfo geometry="389.51;101.17;-78;-50;156;100" scenegeometry="637.91;160.01;559.91;110.01;156;100"/>
+            <transition type="external" target="Running" event="Database.Setup.Successfully">
+                <qt:editorinfo startTargetFactors="84.50;51.97"/>
+            </transition>
+        </state>
+        <state id="WaitSetupMSSQL">
+            <qt:editorinfo geometry="382.04;473.45;-78;-50;156;100" scenegeometry="630.44;532.29;552.44;482.29;156;100"/>
+            <transition type="external" target="Running" event="Database.Setup.Successfully">
+                <qt:editorinfo endTargetFactors="5.51;71.43"/>
+            </transition>
+        </state>
+        <transition type="external" event="Database.Error.*" target="Final_1_Database">
+            <qt:editorinfo startTargetFactors="98.60;61.93"/>
+        </transition>
+    </state>
+    <final id="Final_1_Database">
+        <qt:editorinfo geometry="1088.14;387.62;-20;-20;40;40" scenegeometry="1088.14;387.62;1068.14;367.62;40;40"/>
+    </final>
+    <final id="Final_2_Database">
+        <qt:editorinfo geometry="20.94;345.57;-20;-20;40;40" scenegeometry="20.94;345.57;0.94;325.57;40;40"/>
+    </final>
+</scxml>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_GetRightNow" qt:editorversion="4.11.1">
+    <state id="CallSP_GetRightNow">
+        <qt:editorinfo scenegeometry="161.36;362.86;15.37;39.40;468.42;586.10" geometry="161.36;362.86;-145.99;-323.46;468.42;586.10"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="YJInfo"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="90.97;374.23;99.12;114.57;303.88;338.14" geometry="-70.39;11.37;8.15;-259.66;303.88;338.14"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.GetRightNow" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="79.58;96.49"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="334.25;224.86;191.12;174.86;120;100" geometry="243.28;-149.37;-143.13;-50;120;100"/>
+                <transition type="external" event="Punch.GetRightNow" target="CallStoredProcedure"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="249.48;372.74;163.98;322.74;171;100" geometry="158.51;-1.49;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="false"/>
+                        <param name="name" expr="PROJECT_NAME.GetRightNow"/>
+                        <param expr="Punch.GetRightNow.Result" name="callback_message"/>
+                        <param name="done_message" expr="Database.Task.Done.Punch.GetRightNow">
+                            <qt:editorinfo geometry="24.56;29.67;0;0;0;0"/>
+                        </param>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.GetRightNow" target="CallSP">
+                    <qt:editorinfo endTargetFactors="94.97;75.68"/>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="190.20;547.78;107.20;497.78;120;100" geometry="28.84;184.92;-83;-50;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="339.96;689.27;319.96;669.27;40;40" geometry="339.96;689.27;-20;-20;40;40"/>
+    </final>
+</scxml>

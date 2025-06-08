@@ -1,0 +1,39 @@
+syntax = "proto3";
+package PythonAgent;
+
+message Eval
+{
+	message Result
+	{
+		string command	= 1;
+		string response = 2;
+	}
+	message Error
+	{
+		int32  code		= 1;
+		string message	= 2;
+	}
+	string command_group = 1;
+	string command = 2;
+	string file = 3;
+	string params = 4;
+	string extra_params = 5;
+}
+
+message EvalViaShell
+{
+	message Result
+	{
+		string command	= 1;
+		string response = 2;
+	}
+	message Error
+	{
+		int32  code		= 1;
+		string message	= 2;
+	}
+	string command = 1;
+	string file = 2;
+	repeated string params = 3;
+	string extra_params = 4;
+}

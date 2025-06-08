@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SMS" qt:editorversion="4.13.2">
+    <state id="SMS" initial="SMS.LoadSMS">
+        <qt:editorinfo geometry="946.49;349.56;-664.24;-169.75;847.60;418.82" scenegeometry="946.49;349.56;282.25;179.81;847.60;418.82"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_SMS">
+            <qt:editorinfo startTargetFactors="1.90;76.16"/>
+        </transition>
+        <state id="SMS.LoadSMS">
+            <qt:editorinfo geometry="-565.78;-54.62;-68.50;-50;137;100" scenegeometry="380.71;294.94;312.21;244.94;137;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;SMS&quot;})</script>
+            </onentry>
+            <transition type="external" target="SMS.LoadFileIO" cond="::return.Bio.Cell.NewRNA"/>
+            <transition type="external" target="Final_SMS"/>
+        </state>
+        <state id="Running">
+            <qt:editorinfo geometry="-202.40;-17.72;-251.73;-66.25;383.46;280" scenegeometry="744.09;331.84;492.36;265.59;383.46;280"/>
+            <transition type="internal" event="SMS.Send">
+                <script>SMS.Send</script>
+            </transition>
+            <transition type="external" event="SMS.Error" cond="::SMS.Error.code==&quot;CONNECTION_FAILED&quot;" target="SMS.ErrorStatus">
+                <qt:editorinfo startTargetFactors="48.12;96.59"/>
+                <assign location="SMS.message" expr="伺服器網路連線不正常，請通知店家。(錯誤代碼: ::SMS.Error.code, 錯誤訊息: ::SMS.Error.msg)。"/>
+            </transition>
+            <transition type="external" event="SMS.Error" cond="::SMS.Error.code==&quot;SYSTEM_ERROR&quot;" target="SMS.ErrorStatus">
+                <qt:editorinfo startTargetFactors="95.12;69.97"/>
+                <assign location="SMS.message" expr="系統錯誤，請通知系統廠商。(錯誤代碼: ::SMS.Error.code, 錯誤訊息: ::SMS.Error.msg)。"/>
+            </transition>
+            <transition type="external" event="SMS.Error" cond="::SMS.Error.code==&quot;UNFINISHED_FLOW&quot;" target="SMS.ErrorStatus">
+                <qt:editorinfo startTargetFactors="94.36;58.72"/>
+                <assign location="SMS.message" expr="系統回復中，請稍後再重送驗證碼。(錯誤代碼: ::SMS.Error.code, 錯誤訊息: ::SMS.Error.msg)。"/>
+            </transition>
+            <transition type="external" event="SMS.Error" cond="::SMS.Error.code==&quot;DATA_ERROR&quot;" target="SMS.ErrorStatus">
+                <qt:editorinfo startTargetFactors="93.39;40.54"/>
+                <assign location="SMS.message" expr="資料格式不正確，請通知系統廠商。(錯誤代碼: ::SMS.Error.code, 錯誤訊息: ::SMS.Error.msg)。"/>
+            </transition>
+            <transition type="external" event="SMS.Error" cond="::SMS.Error.code==&quot;UNAUTHORIZED_ERROR&quot;" target="SMS.ErrorStatus">
+                <qt:editorinfo startTargetFactors="92.34;50.24"/>
+                <assign location="SMS.message" expr="金額或權限不足，請通知店家。(錯誤代碼: ::SMS.Error.code, 錯誤訊息: ::SMS.Error.msg)。"/>
+            </transition>
+            <transition type="external" event="SMS.Error" target="SMS.ErrorStatus">
+                <qt:editorinfo startTargetFactors="92.34;50.24"/>
+                <assign location="SMS.message" expr="不明錯誤。(錯誤代碼: ::SMS.Error.code, 錯誤訊息: ::SMS.Error.msg)。"/>
+            </transition>
+        </state>
+        <state id="SMS.ErrorStatus">
+            <qt:editorinfo geometry="81.95;83.97;-76.50;-50.66;153;100.66" scenegeometry="1028.44;433.53;951.94;382.87;153;100.66"/>
+            <onentry>
+                <send event="Generic.Client.ShowMessage">
+                    <param name="formId" expr="app_dialog_messagebox"/>
+                    <param name="content" expr="{&quot;question&quot;:&quot;::SMS.message&quot;, &quot;ok&quot;:&quot;關閉&quot;}"/>
+                </send>
+            </onentry>
+        </state>
+        <state id="SMS.LoadFileIO">
+            <qt:editorinfo geometry="-570.74;83.64;-73.50;-50;147;100" scenegeometry="375.75;433.20;302.25;383.20;147;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;../FileIO/FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Running" cond="::return.Bio.Cell.NewRNA"/>
+            <transition type="external" target="Final_SMS"/>
+        </state>
+    </state>
+    <final id="Final_SMS">
+        <qt:editorinfo geometry="124.83;433.20;-20;-20;40;40" scenegeometry="124.83;433.20;104.83;413.20;40;40"/>
+    </final>
+</scxml>

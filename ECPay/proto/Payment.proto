@@ -1,0 +1,110 @@
+syntax = "proto3";
+package Payment;
+
+message Order
+{
+	message ProductInfo
+	{
+		string productId = 1;
+		string productName = 2;
+		int32 amount = 3;
+		double price = 4;
+	}
+	string serviceHost = 1;
+	string storeId = 2;
+	string choosePayment = 3;
+	string token1 = 4;
+	string token2 = 5;
+	string orderId = 6;
+	string userId = 7;
+	string orderTime = 8;
+	string returnURL = 9;
+	string remoteIPAddress = 10;
+	string groupId = 20;
+	string repeatType = 21;
+	string totalRepeatCount = 22;
+	repeated ProductInfo orderList = 50;
+	string desc = 51;
+
+	message Result
+	{
+		string code = 1;
+		string url = 2;
+		string uid = 3;
+		string key = 4;
+		string form = 5;
+		string action = 6;
+	}
+
+	message Error
+	{
+		string errCode = 1;
+		string message = 2;
+	}
+}
+
+message CheckOrder
+{
+	string serviceHost = 1;
+	string storeId = 2;
+	string token1 = 3;
+	string token2 = 4;
+	string uid = 5;
+	string key = 6;
+
+	message Result
+	{
+		string code = 1;
+		string message = 2;
+		string uid = 3;
+		string key = 4;
+		string orderId = 10;
+		string userId = 11;
+		string pfn = 12;
+		string finishtime = 13;
+		string cost = 15;
+		string paymentName = 20;
+
+		repeated string cancel_order = 50;
+	}
+
+	message Error
+	{
+		string errCode = 1;
+		string message = 2;
+		string uid = 3;
+		string key = 4;
+		string orderId = 10;
+		string userId = 11;
+		string pfn = 12;
+		string finishtime = 13;
+		string paymentName = 14;
+		string cost = 15;
+	}
+}
+
+message CancelOrder
+{
+	string serviceHost = 1;
+	string storeId = 2;
+	string token1 = 3;
+	string token2 = 4;
+	string orderId = 5;
+	string groupId = 6;
+	string cancelTime = 7;
+	string cancelReason = 8;
+
+	message Result
+	{
+		string code = 1;
+		string message = 2;
+		string orderId = 3;
+		string groupId = 4;
+	}
+
+	message Error
+	{
+		string errCode = 1;
+		string message = 2;
+	}
+}

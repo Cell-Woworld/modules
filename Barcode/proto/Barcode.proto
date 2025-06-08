@@ -1,0 +1,89 @@
+syntax = "proto3";
+package Barcode;
+
+message Generate
+{
+	BARCODE_FORMAT format		= 1;
+	BARCODE_CHARSET encoding	= 2;
+	int32 eccLevel	= 3;	// 0..8
+	int32 width		= 4;
+	int32 height	= 5;
+	int32 margin	= 6;
+	bytes content   = 7;
+	OUTPUT_FORMAT output_format   = 8;
+	string target_model_name = 9;
+
+	enum BARCODE_FORMAT
+	{
+		Aztec=0;
+		Codabar=1;
+		Code39=2;
+		Code93=3;
+		Code128=4;
+		DataBar=5;
+		DataBarExpanded=6;
+		DataMatrix=7;
+		EAN_8=8;
+		EAN_13=9;
+		ITF=10;
+		MaxiCode=11;
+		MicroQRCode=12;
+		PDF417=13;
+		QRCode=14;
+		UPC_A=15;
+		UPC_E=16;
+		Linear_Codes=17;
+		Matrix_Codes=18;
+	}
+	enum BARCODE_CHARSET
+	{
+		Cp437=0;
+		ISO_8859_1=1;
+		ISO_8859_2=2;
+		ISO_8859_3=3;
+		ISO_8859_4=4;
+		ISO_8859_5=5;
+		ISO_8859_6=6;
+		ISO_8859_7=7;
+		ISO_8859_8=8;
+		ISO_8859_9=9;
+		ISO_8859_10=10;
+		ISO_8859_11=11;
+		ISO_8859_13=12;
+		ISO_8859_14=13;
+		ISO_8859_15=14;
+		ISO_8859_16=15;
+		SJIS=16;
+		Shift_JIS=17;
+		Cp1250=18;
+		Cp1251=19;
+		Cp1252=20;
+		Cp1256=21;
+		windows_1250=22;
+		windows_1251=23;
+		windows_1252=24;
+		windows_1256=25;
+		UTF_16BE=26;
+		UTF_16LE=27;
+		UTF_32BE=28;
+		UTF_32LE=29;
+		UnicodeBigUnmarked=30;
+		UnicodeBig=31;
+		UTF_8=32;
+		ASCII=33;
+		US_ASCII=34;
+		Big5=35;
+		GB2312=36;
+		GB18030=37;
+		EUC_CN=38;
+		GBK=39;
+		EUC_KR=40;
+		BINARY=41;
+	}
+	enum OUTPUT_FORMAT
+	{
+		SVG = 0;
+		PNG = 1;
+		JPG = 2;
+	}
+}

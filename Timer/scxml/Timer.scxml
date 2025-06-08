@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Timer" qt:editorversion="4.11.1" initial="Init">
+    <qt:editorinfo initialGeometry="40.57;117.84;-20;-20;40;40"/>
+    <final id="Final_1">
+        <qt:editorinfo geometry="293.71;299.81;-20;-20;40;40" scenegeometry="293.71;299.81;273.71;279.81;40;40"/>
+    </final>
+    <state id="Init">
+        <qt:editorinfo geometry="181.07;117.84;-60;-50;120;100" scenegeometry="181.07;117.84;121.07;67.84;120;100"/>
+        <transition type="external" target="Run" cond="::return.Bio.Cell.NewRNA">
+            <qt:editorinfo movePoint="0;1.02"/>
+        </transition>
+        <onentry>
+            <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;Timer&quot;})</script>
+        </onentry>
+        <transition type="external" target="Final_1"/>
+    </state>
+    <state id="Run">
+        <qt:editorinfo geometry="474.75;94.84;-138;-50;198;146" scenegeometry="474.75;94.84;336.75;44.84;198;146"/>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+            <script>Timer.CancelAll</script>
+        </transition>
+        <transition type="internal" event="Timer.Set">
+            <script>Timer.Set</script>
+        </transition>
+        <transition type="internal" event="Timer.Cancel">
+            <script>Timer.Cancel</script>
+        </transition>
+		<transition type="internal" event="Timer.CancelAll">
+			<script>Timer.CancelAll</script>
+		</transition>
+		<transition type="internal" event="Timer.Now">
+            <script>Timer.Now</script>
+        </transition>
+    </state>
+</scxml>

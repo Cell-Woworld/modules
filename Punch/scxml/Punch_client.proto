@@ -1,0 +1,26 @@
+syntax = "proto3";
+package Punch.Client;
+
+message QueryPunch
+{
+	string userId = 1;
+	string startTime = 2;
+	string endTime = 3;
+}
+
+message PunchIn
+{
+	double latitude = 1;
+	double longitude = 2;
+	int32 id = 3;
+}
+
+message PunchOut
+{
+	double latitude = 1;
+	double longitude = 2;
+}
+
+message PunchSuccess
+{
+}

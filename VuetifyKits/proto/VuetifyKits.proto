@@ -1,0 +1,364 @@
+syntax = "proto3";
+
+package VuetifyKits;
+
+message Send
+{
+	string view = 1;					// VuetifyKits.Layout in JSON format
+	string subView = 2;					// VuetifyKits.PartialLayout in JSON format
+	bool show_result = 3;
+}
+
+message AddTreeView
+{
+	string id = 1;
+	string parentId = 2;
+	string content = 3;
+	bool renew = 4;
+	string target_model_name = 5;
+}
+
+message ModifyTreeView
+{
+	string id = 1;
+	string key = 2;
+	string value = 3;
+	string target_model_name = 4;
+}
+
+message Layout
+{
+	repeated VarVuetifyKit layout = 1;
+	VarVuetifyKit background = 2;
+	string userData = 3;
+	repeated Method methodList = 4;
+}
+
+message PartialLayout
+{
+	repeated VarVuetifyKit layout = 1;
+}
+
+message DataTable
+{
+	repeated DataTableHeader headers = 1;
+	Group group = 2;
+	string recordset = 3;					// json format
+	bool noFooter = 4;
+	bool noHeader = 5;
+	bool noRotation = 6;
+	bool noSearch = 7;
+	bool dark = 8;
+	int32 page = 9;
+	int32 pageSize = 10;
+	int32 serverItemsLength = 11;
+	repeated string sortBy = 12;
+	repeated bool sortDesc = 13;
+	string class = 14;
+
+	message DataTableHeader
+	{
+		string text = 1;
+		string value = 2;
+		string align = 3;
+		bool sortable = 4;
+		string style = 5;
+		string min = 6;
+		string max = 7;
+		string label = 8;
+		string type = 9;
+		string step = 10;
+		string class = 11;
+		bool groupable = 12;
+		string width = 13;
+		string subcomponent = 14;			// supported: header, div, v-btn, v-select, v-text-field, v-textarea, v-checkbox, Section_L2, v-img, v-icon, bool
+		string color = 15;
+		bool filter = 16;
+		bool disabled = 17;
+		bool invisible = 18;
+	}
+
+	message Group
+	{
+		string key = 1;
+		bool expanded = 2;
+	}
+}
+
+message Post
+{
+	bool noInput = 1;
+}
+
+message Chart
+{
+	ChartData chartData = 1;
+	Option options = 2;
+
+	message ChartData
+	{
+		message Datasets
+		{
+			string label = 1;
+			int32 borderWidth = 2;
+			repeated string borderColor = 3;		// in color format, ex. rgb(r,g,b,a) or #rgba
+			repeated string backgroundColor = 4;	// in color format, ex. rgb(r,g,b,a) or #rgba
+			string data = 5;						// in JSON format, ex. [#,#,#...] or [{x:#,y:#,z:#},{x:#,y:#,z:#},{x:#,y:#,z:#},...]
+			bool fill = 6;
+			string pointBorderColor = 7;			// in color format, ex. rgb(r,g,b,a) or #rgba
+		};
+		repeated string labels = 1;
+		repeated Datasets datasets = 2;
+	};
+	message Option
+	{
+		message Tick
+		{
+			bool beginAtZero = 1;
+		};
+		message GridLine
+		{
+			bool display = 1;
+		};
+		message Axis
+		{
+			Tick ticks = 1;
+			GridLine gridLines = 2;
+		};
+		message Scale
+		{
+			repeated Axis xAxes = 1;
+			repeated Axis yAxes = 2;
+		};
+		message Legend
+		{
+			bool display = 1;
+		};
+		message PieceLabel
+		{
+			string mode = 1;
+			int32 precision = 2;
+		}
+		Scale scales = 1;
+		Legend legend = 2;
+		bool responsive = 3;
+		bool maintainAspectRatio = 4;
+		PieceLabel pieceLabel = 5;
+	};
+}
+
+message Badge
+{
+	string content = 1;
+	string style = 2;
+	string color = 3;
+	string class = 4;
+	bool bordered = 10;
+	bool overlap = 11;
+}
+
+message Rating
+{
+	string emptyIcon = 1;
+	string halfIcon = 2;
+	string fullIcon = 3;
+	bool halfIncrements = 4;
+}
+
+message MapInfo
+{
+	enum MarkerType
+	{
+		IMAGE						= 0;
+		FORWARD_CLOSED_ARROW		= 1;
+		FORWARD_OPEN_ARROW			= 2;
+		BACKWARD_CLOSED_ARROW		= 3;
+		BACKWARD_OPEN_ARROW			= 4;
+		CIRCLE						= 5;
+		DOUBLE_CIRCLE				= 6;
+		TRIPLE_CIRCLE				= 7;
+		CIRCLE_SPOT					= 8;
+		TRIANGLE					= 9;
+		INVERT_TRIANGLE				= 10;
+		SQUARE						= 11;
+		PENTAGON					= 12;
+		HEXAGON						= 13;
+		OCTAGON						= 14;
+		PENTASTAR					= 15;
+		HEXASTAR					= 16;
+	}
+	message Coordinate
+	{
+		double lng	= 1;
+		double lat	= 2;
+		string name = 3;
+	}
+	message Marker
+	{
+		string id					= 1;
+		MarkerType type				= 2;
+		string content				= 3;
+		string color				= 4;
+		int32 zIndex				= 5;
+	}
+	Coordinate center				= 1;
+	repeated Coordinate locations	= 2;
+	repeated Marker markers			= 3;
+	int32 zoom						= 4;
+	bool noScrollwheel				= 5;
+	bool notDraggable				= 6;
+	bool noDbClickZoomIn			= 7;
+	repeated string layers			= 8;
+}
+
+message TreeView
+{
+	enum SelectionType
+	{
+		LEAF						= 0;
+		INDEPENDENT					= 1;
+	}
+	bool noSearch = 1;
+	bool caseSensitive = 2;
+	bool openAll = 3;
+	bool selectable = 4;
+	SelectionType selectionType = 5;
+}
+
+message Marquee
+{
+	string direction = 1;				// 'row'|'column'
+	bool reverse = 2;
+	bool noRepeat = 3;
+	int32 repeatMargin = 4;
+	string speed = 5;					// "{\"type\": \"pps\"|\"duration\",\"number\": number}"
+	bool noHoverPause = 6;
+	bool pause = 7;
+}
+
+message Printer
+{
+	string domId = 1;
+	string commandType = 2;
+	string printerName = 3;
+	double zoom = 4;
+}
+
+message VarVuetifyKit
+{
+	string id = 1;
+	string component = 2;
+	string class = 3;
+	string width = 4;
+	string height = 5;
+	string style = 6;
+	string subcomponent = 7;
+	bool dark = 8;
+	string locale = 9;
+	bool disabled = 10;		// v-text-field, v-select, DatePicker
+	string value = 11;		// v-text-field, v-select
+
+	// v-text-field
+	string label = 20;		// v-text-field, v-list-item
+	string type = 21;		// v-text-field
+	string size = 22;		// v-text-field, v-list-item
+	bool readonly = 23;
+	double max = 24;
+	double min = 25;
+	double step = 26;
+	string prependIcon = 27;
+	string prependInnerIcon = 28;
+	string prependOuterIcon = 29;
+
+	// v-btn
+	string color = 30;
+	string content = 31;	// v-btn, v-list-item
+	bool fab = 32;			// v-btn
+	bool iconized = 33;		// v-btn, IconButton
+	bool clickOnce = 34;	// v-btn, v-radio, v-switch
+	int32 elevation = 35;	// v-btn, v-card, v-sheet
+	bool plain = 36;		// v-btn
+
+	// v-img, hRefImage
+	string src = 41;
+	string src2 = 42;
+	bool contain = 43;		// v-img, hRefImage, DatePickerOnly
+	string alt = 44;
+	string href = 45;
+	string maxHeight = 46;
+	string minHeight = 47;
+	string maxWidth = 48;
+	string minWidth = 49;
+
+	// v-tabs
+	bool vertical = 50;
+	bool customizedHover = 51;	// v-tabs
+
+	// v-list-item, IconButton
+	string icon = 60;		// v-list-item, IconButton
+	string color2 = 61;		// IconButton
+
+	// v-select
+	string text = 70;		// v-select, v-btn
+	bool dense = 71;
+	bool outlined = 72;
+	string backgroundColor = 73;
+	
+	// GridSection, CardList
+	int32 cols = 80;			// 1, 2, 3, 4, 6, 12
+
+	// input
+	string accept = 90;
+	bool multiple = 91;
+
+	// CardCarcousel
+	bool cycle = 100;
+	bool hideArrows = 101;
+	bool showArrowsOnHover = 102;
+	bool hideDelimiters = 103;
+	bool hideDelimiterBackground = 104;
+	int32 interval = 105;
+
+	// v-tooltip
+	string hint = 110;			// v-tooltip, IconButton
+
+	// v-btn-toggle
+	bool mandatory = 120;
+
+	// v-Rating
+	int32 length = 130;
+
+	// v-text-field
+	bool filled = 140;
+	bool rounded = 141;
+
+	// v-switch
+	bool inset = 150;
+
+	// extended properties
+	Chart chart = 200;
+	DataTable dataTable = 201;
+	Post post = 202;
+	Badge badge = 203;
+	MapInfo map = 204;
+	Rating rating = 205;
+	TreeView treeView = 206;
+	Marquee marquee = 207;
+	Printer printer = 208;
+
+	// customized components
+	bool invisible = 900;
+	string userData = 901;
+
+	repeated VarVuetifyKit items  = 1000;	// group, popup, list
+	repeated VarVuetifyKit prepend = 1001;
+	repeated VarVuetifyKit append = 1002;
+	string description = 1003;
+}
+
+message Method
+{
+	string component = 1;
+	string functionName = 2;
+	string functionValue = 3;
+}

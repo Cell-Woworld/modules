@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Timer" qt:editorversion="4.15.0">
+    <state id="Init">
+        <qt:editorinfo scenegeometry="160.61;117.84;100.61;67.84;120;100" geometry="160.61;117.84;-60;-50;120;100"/>
+        <transition type="external" target="LoadVuetifyKits" cond="::Bio.Cell.VuetifyKits.isLoaded=false"/>
+        <transition type="external" target="Final_1"/>
+    </state>
+    <state id="Run">
+        <qt:editorinfo scenegeometry="582.18;109.84;425.18;59.84;217;116" geometry="582.18;109.84;-157;-50;217;116"/>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <transition type="internal" event="VuetifyKits.Send">
+            <script>VuetifyKits.Send</script>
+        </transition>
+        <transition type="internal" event="VuetifyKits.AddTreeView">
+            <script>VuetifyKits.AddTreeView</script>
+        </transition>
+        <transition type="internal" event="VuetifyKits.ModifyTreeView">
+            <script>VuetifyKits.ModifyTreeView</script>
+        </transition>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="293.71;299.81;273.71;279.81;40;40" geometry="293.71;299.81;-20;-20;40;40"/>
+    </final>
+    <state id="LoadVuetifyKits">
+        <qt:editorinfo scenegeometry="320.91;117.84;247.41;67.84;147;100" geometry="320.91;117.84;-73.50;-50;147;100"/>
+        <onentry>
+            <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;VuetifyKits&quot;,&quot;result&quot;:&quot;Bio.Cell.VuetifyKits.isLoaded&quot;})</script>
+        </onentry>
+        <transition type="external" target="Run" cond="::return.Bio.Cell.NewRNA">
+            <!--<assign location="Bio.Cell.VuetifyKits.isLoaded" expr="true"/>-->
+        </transition>
+        <transition type="external" target="Final_1"/>
+    </state>
+</scxml>

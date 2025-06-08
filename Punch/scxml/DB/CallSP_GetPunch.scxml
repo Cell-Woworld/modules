@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_GetPunch" qt:editorversion="4.11.1">
+    <state id="CallSP_GetPunch">
+        <qt:editorinfo scenegeometry="161.36;362.86;129.22;3.07;505.36;636.20" geometry="161.36;362.86;-32.14;-359.79;505.36;636.20"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="YJInfo"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="90.97;374.23;152.69;87.78;461.89;395.69" geometry="-70.39;11.37;61.72;-286.45;461.89;395.69"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.GetPunch" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="64.80;95.60"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="320.96;222.82;177.83;172.82;120;100" geometry="229.99;-151.41;-143.13;-50;120;100"/>
+                <transition type="external" event="Punch.GetPunch" target="Preparing"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="282.25;388.10;196.75;338.10;171;100" geometry="191.28;13.87;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.GetPunch"/>
+                        <param expr="Punch.GetPunch.Result" name="callback_message"/>
+                        <param name="done_message" expr="Database.Task.Done.Punch.GetPunch">
+                            <qt:editorinfo geometry="22.51;20.46;0;0;0;0"/>
+                        </param>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.GetPunch" target="CallSP">
+                    <qt:editorinfo endTargetFactors="2.27;75.79"/>
+                </transition>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="553.53;202.59;434.53;175.90;120;100" geometry="462.56;-171.64;-119;-26.69;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="21.52;28.69;0;0;0;0"/>
+                        <param expr="RIGHT_NOW" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="RightNow"/>
+                        <param name="target_model_name" expr="Punch.GetPunch.RightNow"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" event="Prepared" target="Preparing2"/>
+            </state>
+            <state id="Preparing2">
+                <qt:editorinfo scenegeometry="552.58;367.47;395.58;318.09;196;145.38" geometry="461.61;-6.76;-157;-49.38;196;145.38"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="22.52;26.61;0;0;0;0"/>
+                        <param expr="DATE_FORMAT" name="name"/>
+                        <param name="parameters" expr="[::Punch.GetPunch.RightNow, 'YYYY-MM-DD']"/>
+                        <param name="alias" expr="Today"/>
+                        <param name="target_model_name" expr="Punch.GetPunch.Today"/>
+                    </send>
+                    <send event="CheckUserId"/>
+                    <send event="CheckBeginTime"/>
+                    <send event="CheckEndTime"/>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="internal" event="CheckUserId" cond="::Punch.GetPunch.userId=&quot;&quot;">
+                    <assign location="Punch.GetPunch.userId" expr="null"/>
+                </transition>
+                <transition type="internal" event="CheckBeginTime" cond="::Punch.GetPunch.beginTime=&quot;&quot;">
+                    <assign location="Punch.GetPunch.beginTime" expr="::Punch.GetPunch.Today"/>
+                </transition>
+                <transition type="internal" event="CheckEndTime" cond="::Punch.GetPunch.endTime=&quot;&quot;">
+                    <assign location="Punch.GetPunch.endTime" expr="::Punch.GetPunch.RightNow"/>
+                </transition>
+                <transition type="external" event="Prepared" target="CallStoredProcedure"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="247.49;569.27;164.49;519.27;120;100" geometry="86.13;206.41;-83;-50;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="348.15;688.25;328.15;668.25;40;40" geometry="348.15;688.25;-20;-20;40;40"/>
+    </final>
+</scxml>

@@ -1,0 +1,25 @@
+syntax = "proto3";
+package DockerAgent;
+
+message Docker
+{
+	string command = 1;
+	bytes params = 2;
+	message Result
+	{
+		string command	= 1;
+		bytes response = 2;
+	}
+}
+
+message Compose
+{
+	string config_filename = 1;
+	string command = 2;
+	bytes params = 3;
+	message Result
+	{
+		string command	= 1;
+		bytes response = 2;
+	}
+}

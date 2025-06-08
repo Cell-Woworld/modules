@@ -1,0 +1,61 @@
+syntax = "proto3";
+package FileIO;
+
+message Read
+{
+	string filename = 1;
+	string target	= 2;		// target model name. If not assigned, it will be written to "return.FileIO.Read"
+	bool utf8Name	= 3;
+}
+
+message Write
+{
+	string filename = 1;
+	bytes content	= 2;		// content to be written to the assigned filename
+	bool force		= 3;		// create folders automatically
+	bool utf8Name	= 4;
+}
+
+message Remove
+{
+	string filename = 1;	// filename and fileList, pick on of two. If both are not empty, filename is 1st priority
+	repeated string fileList = 2;
+	bool utf8Name	= 3;
+}
+
+message FileExists
+{
+	string filename = 1;
+	bool utf8Name	= 2;
+}
+
+message Print
+{
+	bool	netPrinter = 1;			// required
+	string	printerName = 2;		// optional, empty means using default printer
+	string	filename = 3;			// optional, option1
+	string	content = 4;			// optional, option2
+	string	portName = 5;			// optional, empty means LPT1
+	int32	waitTime = 6;			// unit: seconds
+	bool	removeOutputFile = 7;	// optional
+}
+
+message Copy
+{
+	string source	= 1;
+	string target	= 2;
+	bool utf8Name	= 3;
+	bool deepCopy	= 4;			// copy items including child folders
+	bool createSymlinks	= 5;
+}
+
+message ReplaceStringInFiles
+{
+	string source	= 1;
+	string target	= 2;
+	bool utf8Name	= 3;
+	bool deepReplacing = 4;
+	string filter	= 5;			// ex. *.txt
+	repeated string to_be_replaced = 6;
+	repeated string replace_with = 7;
+}

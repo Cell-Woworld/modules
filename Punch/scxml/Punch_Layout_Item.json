@@ -1,0 +1,11 @@
+{
+	"punch_in_already": {
+		"description": "Punch in again",
+		"id": "app_punch_in_again",
+		"component": "YesNo",
+		"label": "詢問",
+		"class": "list-menu-title",
+		"style": "text-align:center;",
+		"content": "{\"question\":\"上班卡已於::Punch.GetPunch.Result.punchTime打，是否要覆蓋稍早打卡紀錄\", \"yes\":\"是\", \"no\":\"否\", \"value\":\"::Punch.GetPunch.Result.punchTime\", \"id\":\"::Punch.GetPunch.Result.id\"}"
+	}
+}

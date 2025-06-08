@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_CreatePunch" qt:editorversion="4.11.1">
+    <state id="BuildSP_CreatePunch">
+        <qt:editorinfo scenegeometry="316.96;240.74;189.71;27.13;521.38;542.69" geometry="316.96;240.74;-127.25;-213.61;521.38;542.69"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="YJInfo"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo scenegeometry="262.48;263.36;209.71;111.59;455.90;316.92" geometry="-54.48;22.62;-52.77;-151.77;455.90;316.92"/>
+            <invoke src="../../DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Insert">
+                <qt:editorinfo scenegeometry="275.71;344.60;229.71;308.10;120;100" geometry="13.23;81.24;-46;-36.50;120;100"/>
+                <onentry>
+                    <send event="Database.Insert">
+                        <qt:editorinfo geometry="56.95;57.99;0;0;0;0"/>
+                        <param name="model_list" expr="[PROJECT_NAME.Punch.userId,PROJECT_NAME.Punch.punchTime,PROJECT_NAME.Punch.punchType,PROJECT_NAME.Punch.latitude,PROJECT_NAME.Punch.longitude]"/>
+                    </send>
+                    <send event="StartBuild">
+                        <qt:editorinfo geometry="86.95;87.99;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" target="CreateStoredProcedure" event="StartBuild">
+                    <qt:editorinfo endTargetFactors="28.91;49.05"/>
+                </transition>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo scenegeometry="529.52;358.51;436.52;308.51;186;100" geometry="267.04;95.15;-93;-50;186;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.CreatePunch"/>
+                        <param name="done_message" expr="Database.Task.Done.Punch.CreatePunch">
+                            <qt:editorinfo geometry="22.51;30.69;0;0;0;0"/>
+                        </param>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.*" target="Final_1"/>
+            </state>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+            <state id="Setup">
+                <qt:editorinfo scenegeometry="299.56;227.85;239.56;177.85;120;100" geometry="37.08;-35.51;-60;-50;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Preparing">
+                    <qt:editorinfo movePoint="24.37;1.28"/>
+                </transition>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="529.52;222.71;469.52;172.71;120;100" geometry="267.04;-40.65;-60;-50;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.Punch.userId]"/>
+                        <param name="alias" expr="UserId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.Punch.userId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="82.51;80.46;0;0;0;0"/>
+                        <param expr="RIGHT_NOW" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="RightNow"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.Punch.punchTime"/>
+                    </send>
+                    <send event="Prepared">
+                        <qt:editorinfo geometry="112.51;110.46;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Prepared" target="Insert"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="392.39;499.82;309.39;449.82;120;100" geometry="75.43;259.08;-83;-50;120;100"/>
+            <transition type="external" target="Final_1">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="529.52;642.34;509.52;622.34;40;40" geometry="529.52;642.34;-20;-20;40;40"/>
+    </final>
+</scxml>

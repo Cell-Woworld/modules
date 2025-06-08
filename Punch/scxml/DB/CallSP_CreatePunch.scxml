@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_CreatePunch" qt:editorversion="4.11.1">
+    <state id="CallSP_CreatePunch">
+        <qt:editorinfo scenegeometry="104.10;247.48;1.64;-38.05;485.75;568.76" geometry="104.10;247.48;-102.46;-285.53;485.75;568.76"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="YJInfo"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="50;259.94;62.08;39.26;364.88;299.40" geometry="-54.10;12.46;12.08;-220.68;364.88;299.40"/>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="50.46;96.93"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="428.62;139.70;285.49;89.70;120;100" geometry="175.21;-112.72;-143.13;-50;120;100"/>
+                <transition type="internal" event="Punch.CreatePunch" target="Preparing"/>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="594.37;132.90;483.12;91.66;120;100" geometry="340.96;-119.52;-111.25;-41.24;120;100"/>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <assign location="PROJECT_NAME.Punch.userId" expr="::Punch.CreatePunch.userId"/>
+                    <assign location="PROJECT_NAME.Punch.punchType" expr="::Punch.CreatePunch.punchType"/>
+                    <assign location="PROJECT_NAME.Punch.latitude" expr="::Punch.CreatePunch.latitude"/>
+                    <assign location="PROJECT_NAME.Punch.longitude" expr="::Punch.CreatePunch.longitude"/>
+                </onentry>
+                <transition type="external" target="CallStoredProcedure"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="449.03;259.04;363.53;209.04;171;100" geometry="195.62;6.62;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.CreatePunch"/>
+                        <param name="done_message" expr="Database.Task.Done.Punch.CreatePunch">
+                            <qt:editorinfo geometry="-9.66;-2.15;0;0;0;0"/>
+                        </param>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Punch.CreatePunch" target="CallSP">
+                    <qt:editorinfo endTargetFactors="96.16;75.99"/>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="367.30;441.28;284.30;391.28;120;100" geometry="38.62;201.32;-83;-50;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="244.52;582.02;224.52;562.02;40;40" geometry="244.52;582.02;-20;-20;40;40"/>
+    </final>
+</scxml>

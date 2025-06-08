@@ -1,0 +1,12 @@
+{
+	"background": {
+		"style": "background-size:contain;background-position:center;margin:auto;background-repeat:no-repeat;background-color:#262727;"
+	},
+	"layout": [
+		{
+			"id": "sms_vericode",
+			"component": "VeriCode",
+			"content": "::SMS.VeriCode.Result.msg"
+		}
+	]
+}

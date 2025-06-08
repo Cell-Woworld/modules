@@ -1,0 +1,95 @@
+syntax = "proto3";
+package Database;
+
+message Const_DB
+{
+	enum PROC_TYPE
+	{
+		QUERY = 0;
+		INSERT = 1;
+		UPDATE = 2;
+		DELETE = 3;
+	}
+
+	enum OPERATOR_TYPE
+	{
+		EQUAL = 0;							// var1 = var2 or var1 == var2
+		NOT_EQUAL = 1;						// var1 != var2
+		GREATER = 2;						// var1 > var2
+		GREATER_EQUAL = 3;					// var1 >= var2
+		LESS = 4;							// var1 < var2
+		LESS_EQUAL = 5;						// var1 <= var2
+		LIKE = 6;							// var1 LIKE var2
+		NOT_LIKE = 7;						// var1 NOT_LIKE var2
+		EXISTS = 8;							// EXISTS var2
+		NOT_EXISTS = 9;						// NOT_EXISTS var2
+		BETWEEN = 10;						// var1 BETWEEN var2 var3
+		IN = 11;							// var1 IN var2  			(ps. var2 must be the format of (xxx,yyy,zzz,...)) 
+		NOT_IN = 12;						// var1 NOT_IN var2  		(ps. var2 must be the format of (xxx,yyy,zzz,...)) 
+		GROUP_BY = 13;						// GROUP_BY var2			(ps. var2 must be model_list of Query)
+		ORDER_BY = 14;						// ORDER_BY var2			(ps. var2 must be column of table, var3 can be SORT_TYPE)
+		HAVING = 15;						// HAVING var2				(ps. var2 must be a string without single quote)
+		PAGING = 16;						// PAGING var2 var3			(ps. var2, var3 must be a number; var2:offset, var3:size)
+		TABLE = 17;							// TABLE var2				(ps. var2 must be the format of [db.table.xxx,db.table.yyy,db.table.zzz,...])
+		DYNAMIC_CONDITIONS = 18;			// DYNAMIC_CONDITIONS var2	(ps. var2 must be an assigned string-array model name with the format of "::xxx.yyy.zzz")
+	}
+	enum SORT_TYPE
+	{
+		ASCENDING = 0;
+		DESCENDING = 1;
+	}
+}
+
+message Query
+{
+	repeated string model_list = 1;			// list of all model names that will be retrieved from Database
+	bool difference_only = 2;
+}
+
+message AddCond
+{
+	string var1 = 1;						// supported format: database_name.table_name.column_name, 'string', number
+	string op = 2;							// supported operator: ref. OPERATOR_TYPE
+	string var2 = 3;						// supported format: database_name.table_name.column_name, 'string', number or some special format (ref. OPERATOR_TYPE)
+	string var3 = 4;						// supported format: database_name.table_name.column_name, 'string', number
+}
+
+message CheckPoint
+{
+}
+
+message Insert
+{
+	repeated string model_list = 1;
+	string subquery = 2;
+}
+
+message Update
+{
+	repeated string model_list = 1;
+	string subquery = 2;
+}
+
+message Remove
+{
+	repeated string model_list = 1;
+}
+
+message Config
+{
+	uint32 connection_pool_size = 1;
+	uint32 keep_alive_interval = 2;
+}
+
+message GenerateUUID
+{
+	string target_model_name = 1;
+}
+
+message Private
+{
+	message OperatorConvertor
+	{
+		Const_DB.OPERATOR_TYPE op = 1;
+	}
+}
